@@ -136,7 +136,7 @@ def ping(host, timeout=1):
     stdev_var = round(statistics.stdev(list(arrayTime) * 1000, 2))
      # vars = [(round(packet_min, 2)), (round(packet_avg, 2)), (round(packet_max, 151 2)), (stdev_var)]
     # vars = [packet_min, packet_avg, packet_max, stdev_var]
-
+ #
     vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)),
             str(round(packet_max, 2)), str(stdev_var)]
 
