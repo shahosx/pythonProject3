@@ -114,20 +114,35 @@ def ping(host, timeout=1):
     # Calculate vars values and return them
 
     # Send ping requests to a server separated by approximately one second
-    arrayTime =[0] * 4
-    delayList= []
-    for i in range(0,4):
+    arrayTime = [0.0] * 4
+    # vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), 137 str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
+    # Send ping requests to a server separated by approximately one second
+    for i in range(0, 4):
         delay = doOnePing(dest, timeout)
-        print(delay)
-        time.sleep(1)  # one second
+     # print(delay)
+
+    arrayTime[i] = delay
+      # print(arrayTime[i])
+
+    time.sleep(1)  # one second
 
     packet_min = min(arrayTime) * 1000
+
     packet_max = max(arrayTime) * 1000
-    packet_avg = (sum(arrayTime)/len(arrayTime))*1000
-    stdev_var = round(statistics.stdev(list(arrayTime) *1000,2))
-    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)), str(stdev_var)]
+
+    packet_avg = (sum(arrayTime) / len(arrayTime)) * 1000
+     # stdev_var = round(statistics.stdev(arrayTime), 2)
+
+    stdev_var = round(statistics.stdev(list(arrayTime) * 1000, 2))
+     # vars = [(round(packet_min, 2)), (round(packet_avg, 2)), (round(packet_max, 151 2)), (stdev_var)]
+    # vars = [packet_min, packet_avg, packet_max, stdev_var]
+
+    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)),
+            str(round(packet_max, 2)), str(stdev_var)]
+
     print(vars)
     return vars
+
 
 if __name__ == '__main__':
     ping("google.co.il")
