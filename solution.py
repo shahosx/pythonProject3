@@ -61,7 +61,7 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         timeLeft = timeLeft - howLongInSelect
         if timeLeft <= 0:
             return "Request timed out."
-        
+        return 1-timeLeft
 
 
 def sendOnePing(mySocket, destAddr, ID):
@@ -122,7 +122,12 @@ def ping(host, timeout=1):
         print(delay)
         time.sleep(1)  # one second
 
-
+    packet_min = min(arrayTime) * 1000
+    packet_max = max(arrayTime) * 1000
+    packet_avg = (sum(arrayTime) / len(arrayTime)) * 1000
+    stdev_var = round(statistics.stdev(list(arrayTime) * 100, 2))
+    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)), str(stdev_var)]
+    print("Response: " + vars)
     return vars
 
 if __name__ == '__main__':
