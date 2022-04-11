@@ -49,20 +49,19 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         recPacket, addr = mySocket.recvfrom(1024)
 
         # Fill in start
-
         header = recPacket[20:28]
-        header_type, header_code, header_checksum, header_ID, header_sequence = struct.unpack("bbHHh", header),
-
-        if(header_type != 0 or header_code != 0 or header_ID != ID or header_sequence != 1):
-            return "Receive error."
         # Fetch the ICMP header from the IP packet
+        header_type, header_code, header_checksum, header_packet_ID, header_sequence = struct.unpack("bbHHh", header)
+
+        if(header_type != 0 or header_code != 0 or header_packet_ID != ID or header_sequence != 1):
+            return "Receive error."
+
 
         # Fill in end
         timeLeft = timeLeft - howLongInSelect
         if timeLeft <= 0:
             return "Request timed out."
-        return 1-timeLeft
-
+        return 1 - timeLeft
 
 def sendOnePing(mySocket, destAddr, ID):
     # Header is type (8), code (8), checksum (16), id (16), sequence (16)
@@ -115,8 +114,8 @@ def ping(host, timeout=1):
     # Calculate vars values and return them
 
     # Send ping requests to a server separated by approximately one second
-    arrayTime =[0.0] * 4
-   # delayList= []
+    arrayTime =[0] * 4
+    delayList= []
     for i in range(0,4):
         delay = doOnePing(dest, timeout)
         print(delay)
@@ -124,10 +123,10 @@ def ping(host, timeout=1):
 
     packet_min = min(arrayTime) * 1000
     packet_max = max(arrayTime) * 1000
-    packet_avg = (sum(arrayTime) / len(arrayTime)) * 1000
-    stdev_var = round(statistics.stdev(list(arrayTime) * 100, 2))
+    packet_avg = (sum(arrayTime)/len(arrayTime))*1000
+    stdev_var = round(statistics.stdev(list(arrayTime) *1000,2))
     vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)), str(stdev_var)]
-    print("Response: " + vars)
+    print(vars)
     return vars
 
 if __name__ == '__main__':
