@@ -4,6 +4,7 @@ import sys
 import struct
 import time
 import select
+import statistics
 import binascii
 # Should use stdev
 
@@ -49,12 +50,18 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
 
         # Fill in start
 
+        header = recPacket[20:28]
+        header_type, header_code, header_checksum, header_ID, header_sequence = struct.unpack("bbHHh", header),
+
+        if(header_type != 0 or header_code != 0 or header_ID != ID or header_sequence != 1):
+            return "Receive error."
         # Fetch the ICMP header from the IP packet
 
         # Fill in end
         timeLeft = timeLeft - howLongInSelect
         if timeLeft <= 0:
             return "Request timed out."
+        
 
 
 def sendOnePing(mySocket, destAddr, ID):
@@ -107,15 +114,14 @@ def ping(host, timeout=1):
     print("")
     # Calculate vars values and return them
 
-    #vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
     # Send ping requests to a server separated by approximately one second
-    num =4
-    lost =0
-    delayList= []
+    arrayTime =[0.0] * 4
+   # delayList= []
     for i in range(0,4):
         delay = doOnePing(dest, timeout)
         print(delay)
         time.sleep(1)  # one second
+
 
     return vars
 
